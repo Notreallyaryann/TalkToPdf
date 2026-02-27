@@ -9,13 +9,17 @@ const nextConfig = {
  
   serverExternalPackages: [
     'pdf-parse',
-    '@xenova/transformers', // Keep this
+    '@xenova/transformers',
   ],
+
+ 
+  experimental: {
+    esmExternals: 'loose',  
+  },
 
   outputFileTracingExcludes: {
     '**/*': [
       '.model_cache/**/*',
-      // No need to exclude onnxruntime-node anymore!
     ]
   },
   
@@ -25,6 +29,15 @@ const nextConfig = {
         ...(config.externals || []),
         '@xenova/transformers',
       ];
+
+      
+      config.module.rules.push({
+        test: /\.m?js$/,
+        type: 'javascript/auto',
+        resolve: {
+          fullySpecified: false,
+        },
+      });
     }
     return config;
   },

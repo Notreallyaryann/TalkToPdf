@@ -7,29 +7,23 @@ const nextConfig = {
     ],
   },
  
-  
   serverExternalPackages: [
-    '@huggingface/transformers',
-    '@xenova/transformers',
-    'onnxruntime-node',
     'pdf-parse',
+    '@xenova/transformers', // Keep this
   ],
 
   outputFileTracingExcludes: {
     '**/*': [
       '.model_cache/**/*',
-      'node_modules/@huggingface/transformers/dist/**/*',
-      'node_modules/onnxruntime-node/bin/**/*',
+      // No need to exclude onnxruntime-node anymore!
     ]
   },
   
   webpack: (config, { isServer }) => {
     if (isServer) {
-      
       config.externals = [
         ...(config.externals || []),
-        '@huggingface/transformers',
-        'onnxruntime-node',
+        '@xenova/transformers',
       ];
     }
     return config;

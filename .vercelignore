@@ -1,0 +1,8 @@
+# .vercelignore
+node_modules/onnxruntime-node/bin
+node_modules/@img
+.model_cache
+*.onnx
+*.bin
+*.node
+*.wasm

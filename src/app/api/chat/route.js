@@ -1,8 +1,6 @@
-
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { getEmbedding } from "@/lib/embeddings";
 import { searchVectors } from "@/lib/qdrant";
 import { chatWithCerebras, extractEntities } from "@/lib/cerebras";
 import { webSearch } from "@/lib/tavily";
@@ -30,7 +28,12 @@ export async function POST(req) {
         let ragContext = "";
         if (documentId) {
             try {
+                // ✅ Dynamically import getEmbedding ONLY when needed
+                const { getEmbedding } = await import('@/lib/embeddings');
+                
+                console.log('🔍 Generating embedding for query...');
                 const queryEmbedding = await getEmbedding(message);
+                
                 const results = await searchVectors(queryEmbedding, userId, documentId, 5);
                 if (results && results.length > 0) {
                     ragContext = results
@@ -73,7 +76,7 @@ export async function POST(req) {
             console.error("Knowledge graph error:", error.message);
         }
 
-        //Get conversation history from Neo4j
+        // Get conversation history from Neo4j
         let history = [];
         if (documentId) {
             try {

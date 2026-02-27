@@ -7,51 +7,30 @@ const nextConfig = {
     ],
   },
  
+  
   serverExternalPackages: [
-    'pdf-parse',
     '@huggingface/transformers',
     '@xenova/transformers',
     'onnxruntime-node',
-    'onnxruntime-common',
-    'onnxruntime-web',
+    'pdf-parse',
   ],
 
   outputFileTracingExcludes: {
     '**/*': [
       '.model_cache/**/*',
-      'node_modules/onnxruntime-node/**/*', // More broad exclusion
-      'node_modules/onnxruntime-*/**/*',    // Catch all variants
-      'node_modules/@img/**/*',             // Exclude all sharp binaries
-      'node_modules/**/*.node',              // Exclude all .node binaries
-      'node_modules/**/*.wasm',              // Exclude WebAssembly files
+      'node_modules/@huggingface/transformers/dist/**/*',
+      'node_modules/onnxruntime-node/bin/**/*',
     ]
   },
   
-  // Add experimental tracing options
-  experimental: {
-    outputFileTracingExcludes: {
-      '**/*': [
-        'node_modules/onnxruntime-node/**/*',
-        'node_modules/@img/**/*',
-      ]
-    }
-  },
-
   webpack: (config, { isServer }) => {
     if (isServer) {
+      
       config.externals = [
         ...(config.externals || []),
+        '@huggingface/transformers',
         'onnxruntime-node',
-        'onnxruntime-common',
-        'sharp',
-        '@img/sharp-libvips'
       ];
-      
-      // Add rule to ignore .node files
-      config.module.rules.push({
-        test: /\.node$/,
-        loader: 'ignore-loader',
-      });
     }
     return config;
   },

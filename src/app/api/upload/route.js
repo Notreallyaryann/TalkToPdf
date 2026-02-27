@@ -1,12 +1,8 @@
-
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { getEmbeddings, chunkText } from "@/lib/embeddings";
-import { upsertVectors } from "@/lib/qdrant";
-import { storeDocumentMetadata } from "@/lib/neo4j";
 import { v4 as uuidv4 } from "uuid";
-import pdf from "pdf-parse";
+
 
 export async function POST(req) {
     try {
@@ -27,6 +23,8 @@ export async function POST(req) {
             return NextResponse.json({ error: "Only PDF files are supported" }, { status: 400 });
         }
 
+        const pdf = (await import('pdf-parse')).default;
+        
         // Parse PDF
         const buffer = Buffer.from(await file.arrayBuffer());
         const pdfData = await pdf(buffer);
@@ -36,6 +34,9 @@ export async function POST(req) {
             return NextResponse.json({ error: "Could not extract text from PDF" }, { status: 400 });
         }
 
+      
+        const { chunkText, getEmbeddings } = await import('@/lib/embeddings');
+        
         // Chunk the text
         const chunks = chunkText(text, 1000, 200);
         const documentId = uuidv4();
@@ -64,10 +65,11 @@ export async function POST(req) {
             }
         }
 
-        // Upsert to Qdrant
+        const { upsertVectors } = await import('@/lib/qdrant');
         await upsertVectors(allPoints);
 
-        // Store metadata in Neo4j
+       
+        const { storeDocumentMetadata } = await import('@/lib/neo4j');
         await storeDocumentMetadata(userId, documentId, file.name, chunks.length);
 
         return NextResponse.json({

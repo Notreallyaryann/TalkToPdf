@@ -6,8 +6,14 @@ const nextConfig = {
       { protocol: 'https', hostname: 'avatars.githubusercontent.com' },
     ],
   },
-    outputFileTracingExcludes: {
-    '**/*': ['.model_cache/**/*']
+ outputFileTracingExcludes: {
+    '**/*': [
+      '.model_cache/**/*',
+      'node_modules/@huggingface/transformers/dist/**/*.onnx',
+      'node_modules/@huggingface/transformers/dist/**/*.bin',
+      'node_modules/onnxruntime-node/**/*', // This can be large
+      'node_modules/@xenova/transformers/**/*.onnx', // If still present
+    ]
   },
   // Add @xenova/transformers here
   serverExternalPackages: [

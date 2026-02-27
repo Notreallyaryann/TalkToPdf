@@ -6,6 +6,9 @@ const nextConfig = {
       { protocol: 'https', hostname: 'avatars.githubusercontent.com' },
     ],
   },
+    outputFileTracingExcludes: {
+    '**/*': ['.model_cache/**/*']
+  },
   // Add @xenova/transformers here
   serverExternalPackages: [
     'pdf-parse',

@@ -1,4 +1,4 @@
-// src/lib/embeddings.js
+
 import { pipeline, env } from '@xenova/transformers';
 
 // Configure cache directory

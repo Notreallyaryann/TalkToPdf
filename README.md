@@ -1,6 +1,6 @@
 # RagSphere - Intelligent Document Q&A with RAG 
 
-![RagSphere Architecture](https://github.com/Notreallyaryann/TalkToPdf/raw/main/1*g4hA4PeLOO0_DdjyD03ggw.webp)
+![RagSphere Architecture](https://github.com/Notreallyaryann/TalkToPdf/raw/main/Architecture.webp)
 
 *RagSphere's core RAG pipeline - turning your documents into intelligent conversations*
 
